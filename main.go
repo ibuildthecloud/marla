@@ -8,6 +8,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/docker/docker/pkg/reexec"
+	"github.com/ibuildthecloud/marla/container"
 	"github.com/ibuildthecloud/marla/daemon"
 	"github.com/ibuildthecloud/marla/rootfs/docker"
 	"github.com/ibuildthecloud/marla/server"
@@ -41,13 +42,15 @@ func mainWithError() error {
 	}
 
 	cwd = filepath.Join(cwd, "runtime")
-	root := filepath.Join(cwd, "image", "overlay")
-	os.MkdirAll(root, 0700)
+	root := filepath.Join(cwd, "overlay")
+
+	// work around docker bug
+	os.MkdirAll(filepath.Join(root, "image"), 0700)
 
 	daemon, err := daemon.New(&daemon.Config{
 		Root: cwd,
 		DockerRootFS: docker.Config{
-			Root: root,
+			Root: filepath.Join(root, "image"),
 			Graph: docker.GraphConfig{
 				Driver: "overlay",
 			},
@@ -55,6 +58,9 @@ func mainWithError() error {
 				MaxConcurrentUploads:   5,
 				MaxConcurrentDownloads: 5,
 			},
+		},
+		Container: container.Config{
+			Root: filepath.Join(root, "container"),
 		},
 	})
 	if err != nil {

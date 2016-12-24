@@ -68,6 +68,7 @@ func (s *Server) setupRoutes() {
 	//notFoundHandler := //httputils.MakeErrorHandler(errors.NewRequestNotFoundError(fmt.Errorf("!! page not found")))
 	notFoundHandler := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		fmt.Println("!!!!!", req.URL)
+		rw.WriteHeader(http.StatusNotFound)
 	})
 	m.HandleFunc(versionMatcher+"/{path:.*}", notFoundHandler)
 	m.NotFoundHandler = notFoundHandler

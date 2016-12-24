@@ -45,9 +45,6 @@ func (d *Daemon) ContainerExtractToDir(name, path string, noOverwriteDirNonDir b
 func (d *Daemon) ContainerStatPath(name string, path string) (stat *types.ContainerPathStat, err error) {
 	return nil, ErrNotImplemented
 }
-func (d *Daemon) ContainerCreate(types.ContainerCreateConfig) (types.ContainerCreateResponse, error) {
-	return types.ContainerCreateResponse{}, ErrNotImplemented
-}
 func (d *Daemon) ContainerKill(name string, sig uint64) error {
 	return ErrNotImplemented
 }
